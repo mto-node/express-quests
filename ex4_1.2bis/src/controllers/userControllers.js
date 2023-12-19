@@ -7,16 +7,27 @@ const getUsers = (req, res) => {
   const sqlValues = [];
   console.log(query)
 
-  if(Object.keys(query).length !== 0) {
-    console.log('req.query is not empty')
+  let keys = Object.keys(query);
+
+  if(keys.length !== 0) {
     sql += " where";
   }
 
-  for(let key in query) {
+  // for(let key in query) {
+  //   if (query.hasOwnProperty(key)) {
+  //     sql += ` ${key} = ?`;
+  //     sqlValues.push(query[key]);
+  //     console.log(` ${key} = ${query[key]}`)
+  //   }
+  // }
+
+  for (let i = 0; i < keys.length; i++) {
+    let key = keys[i];
+
     if (query.hasOwnProperty(key)) {
-      sql += ` ${key} = ?`;
+      sql += `${i === 0 ? '' : ' AND'} ${key} = ?`;
       sqlValues.push(query[key]);
-      console.log(` ${key} = ${query[key]}`)
+      // console.log(` ${key} = ${query[key]}`)
     }
   }
 
@@ -25,7 +36,9 @@ const getUsers = (req, res) => {
   database
     .query(sql, sqlValues)
     .then(([users]) => {
-      res.json(users);
+      console.log(users)
+      if(users.length === 0) res.sendStatus(200)
+      else res.status(200).json(users);
     })
     .catch((err) => {
       console.error(err);
