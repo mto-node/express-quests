@@ -1,0 +1,3 @@
+[submodule "ex3"]
+	path = ex3
+	url = ./ex3
