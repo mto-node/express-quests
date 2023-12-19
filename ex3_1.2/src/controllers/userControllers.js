@@ -28,3 +28,8 @@ const getUserById = (req, res) => {
       res.sendStatus(500);
     });
 };
+
+module.exports = {
+  getUsers,
+  getUserById,
+};
