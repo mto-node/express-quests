@@ -13,14 +13,6 @@ const getUsers = (req, res) => {
     sql += " where";
   }
 
-  // for(let key in query) {
-  //   if (query.hasOwnProperty(key)) {
-  //     sql += ` ${key} = ?`;
-  //     sqlValues.push(query[key]);
-  //     console.log(` ${key} = ${query[key]}`)
-  //   }
-  // }
-
   for (let i = 0; i < keys.length; i++) {
     let key = keys[i];
 
@@ -63,8 +55,30 @@ const getUserById = (req, res) => {
     });
 };
 
+
+const postUser = (req, res) => {
+  console.log(req.body);
+  const { firstname, lastname, email, city, language } = req.body;
+  // res.send("Post route is working 🎉");
+
+  database
+    .query(
+      "INSERT INTO users(firstname, lastname, email, city, language) VALUES (?, ?, ?, ?, ?)",
+      [firstname, lastname, email, city, language]
+    )
+    .then(([result]) => {
+      res.status(201).send({ id: result.insertId });
+    })
+    .catch((err) => {
+      console.error(err);
+      res.sendStatus(500);
+    });
+}
+
+
 module.exports = {
   getUsers,
   getUserById,
+  postUser,
 };
 
